@@ -154,30 +154,55 @@ public abstract class AbstractConfig implements Serializable {
         appendParameters(parameters, config, null);
     }
 
+    /**
+     * 行数均为方法行数
+     * parameters ，参数集合。实际上，该集合会用于 URL.parameters 。
+     * config ，配置对象。
+     * prefix ，属性前缀。用于配置项添加到 parameters 中时的前缀。
+     * 第 5 行：获得所有方法的数组，为下面通过反射获得配置项的值做准备。
+     * 第 6 行：循环每个方法。
+     * 第 9 至 53 行：方法为获得基本类型 + public 的 getting 方法。
+     * 第 14 至 17 行：返回值类型为 Object 或排除( `@Parameter.exclue=true` )的配置项，跳过。
+     * 第 19 至 26 行：获得配置项名。
+     * 第 28 至 48 行：获得配置项值。中间有一些逻辑处理，胖友看下代码的注释。
+     * 第 49 行：添加配置项到 parameters 。
+     * 第 51 至 53 行：当 `@Parameter.required = true` 时，校验配置项非空。
+     * 第 54 至 57 行：当方法为 #getParameters() 时，例如 。
+     * 第 58 行：通过反射，获得 #getParameters() 的返回值为 map 。
+     * 第 59 至 64 行：将 map 添加到 parameters ，kv 格式为 prefix:entry.key entry.value 。
+     * 因此，通过 getParameters() 对应的属性，动态设置配置项，拓展出非 Dubbo 内置好的逻辑。
+     */
     @SuppressWarnings("unchecked")
     protected static void appendParameters(Map<String, String> parameters, Object config, String prefix) {
         if (config == null) {
             return;
         }
+        // 获得所有方法的数组，为下面通过反射获得配置项的值做准备。
         Method[] methods = config.getClass().getMethods();
+       // 循环每个方法
         for (Method method : methods) {
             try {
                 String name = method.getName();
+                // 方法为获得基本类型 + public 的 getting 方法。
                 if (MethodUtils.isGetter(method)) {
+                    // 返回值类型为 Object 或排除( `@Parameter.exclue=true` )的配置项，跳过。
                     Parameter parameter = method.getAnnotation(Parameter.class);
                     if (method.getReturnType() == Object.class || parameter != null && parameter.excluded()) {
                         continue;
                     }
+                    // 获得配置项名
                     String key;
                     if (parameter != null && parameter.key().length() > 0) {
                         key = parameter.key();
                     } else {
                         key = calculatePropertyFromGetter(name);
                     }
+                    // 获得属性值
                     Object value = method.invoke(config);
                     String str = String.valueOf(value).trim();
                     if (value != null && str.length() > 0) {
                         if (parameter != null && parameter.escaped()) {
+                            // 转义
                             str = URL.encode(str);
                         }
                         if (parameter != null && parameter.append()) {
