@@ -105,7 +105,13 @@ class URL implements Serializable {
     private final int port;
 
     private final String path;
-
+    /**
+     * 参数集合
+     * {@link {org.apache.dubbo.config.AbstractConfig#appendParameters(java.util.Map parameters, java.lang.Object, java.lang.String)}}
+     * 格式为 protocol://username:password@host:port/path?key=value&key=value ，通过 {@link #buildString(boolean, boolean, String...)} buildString(...)} 方法生成。
+     *  parameters 属性，参数集合。从上面的 Service URL 例子我们可以看到，里面的 key=value ，实际上就是 Service 对应的配置项。
+     *  该属性，通过 AbstractConfig#appendParameters(parameters, config, prefix) 方法生成。
+     */
     private final Map<String, String> parameters;
 
     // ==== cache ====
