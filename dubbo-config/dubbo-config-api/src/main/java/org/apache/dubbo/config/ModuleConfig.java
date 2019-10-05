@@ -29,7 +29,7 @@ import static org.apache.dubbo.config.Constants.OWNER;
 
 /**
  * The module info
- *
+ * {@link {http://dubbo.apache.org/zh-cn/docs/user/references/xml/dubbo-module.html}}
  * @export
  */
 public class ModuleConfig extends AbstractConfig {

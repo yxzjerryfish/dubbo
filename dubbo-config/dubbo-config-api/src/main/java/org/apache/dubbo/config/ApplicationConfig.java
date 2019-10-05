@@ -56,7 +56,7 @@ import static org.apache.dubbo.config.Constants.TEST_ENVIRONMENT;
 
 /**
  * The application info
- *
+ * {@link {http://dubbo.apache.org/zh-cn/docs/user/references/xml/dubbo-application.html}}
  * @export
  */
 public class ApplicationConfig extends AbstractConfig {
