@@ -218,6 +218,7 @@ public abstract class AbstractConfig implements Serializable {
                         if (prefix != null && prefix.length() > 0) {
                             key = prefix + "." + key;
                         }
+                        // 添加到配置项中
                         parameters.put(key, str);
                     } else if (parameter != null && parameter.required()) {
                         throw new IllegalStateException(config.getClass().getSimpleName() + "." + key + " == null");
