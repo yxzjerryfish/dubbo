@@ -30,7 +30,7 @@ import static org.apache.dubbo.rpc.Constants.THROW_PREFIX;
 
 /**
  * AbstractMethodConfig
- *
+ * @see {@link {http://dubbo.apache.org/zh-cn/docs/user/references/xml/dubbo-method.html}}
  * @export
  */
 public abstract class AbstractMethodConfig extends AbstractConfig {
